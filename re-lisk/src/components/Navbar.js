@@ -1,12 +1,4 @@
-
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useRouteMatch,
-  useParams,
-} from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 
@@ -15,107 +7,102 @@ function Navbar() {
   const location = useLocation();
   const [currAddress, updateAddress] = useState("0x");
 
-
-
-
-
   async function getAddress() {
     try {
-        const ethers = require("ethers");
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-        const addr = await signer.getAddress();
-        updateAddress(addr);
+      const ethers = require("ethers");
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const addr = await signer.getAddress();
+      updateAddress(addr);
     } catch (error) {
-        console.error("Failed to get address:", error);
+      console.error("Failed to get address:", error);
     }
-}
+  }
 
-function updateButton() {
+  function updateButton() {
     const ethereumButton = document.querySelector(".enableEthereumButton");
     ethereumButton.textContent = "Connected";
     ethereumButton.classList.remove("hover-bg-blue-70");
     ethereumButton.classList.remove("bg-blue-500");
     ethereumButton.classList.add("hover:bg-green-70");
     ethereumButton.classList.add("bg-green-500");
-}
+  }
 
-async function connectWebsite() {
-    const liskSepoliaChainId = "0x106a";  
+  async function connectWebsite() {
+    const liskSepoliaChainId = "0x106a";
     const liskSepoliaChainParams = {
-        chainId: liskSepoliaChainId,
-        chainName: "Lisk Sepolia Test Network",
-        nativeCurrency: {
-            name: "Lisk Sepolia ETH",
-            symbol: "ETH",
-            decimals: 18,
-        },
-        rpcUrls: ["https://rpc.sepolia-api.lisk.com"],  
-        blockExplorerUrls: ["https://sepolia-blockscout.lisk.com/"],
+      chainId: liskSepoliaChainId,
+      chainName: "Lisk Sepolia Test Network",
+      nativeCurrency: {
+        name: "Lisk Sepolia ETH",
+        symbol: "ETH",
+        decimals: 18,
+      },
+      rpcUrls: ["https://rpc.sepolia-api.lisk.com"],
+      blockExplorerUrls: ["https://sepolia-blockscout.lisk.com/"],
     };
 
     try {
-        const chainId = await window.ethereum.request({ method: "eth_chainId" });
+      const chainId = await window.ethereum.request({ method: "eth_chainId" });
 
-        if (chainId !== liskSepoliaChainId) {
+      if (chainId !== liskSepoliaChainId) {
+        try {
+          await window.ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: liskSepoliaChainId }],
+          });
+        } catch (switchError) {
+          if (switchError.code === 4902) {
             try {
-                await window.ethereum.request({
-                    method: "wallet_switchEthereumChain",
-                    params: [{ chainId: liskSepoliaChainId }],
-                });
-            } catch (switchError) {
-                if (switchError.code === 4902) {
-                    try {
-                        await window.ethereum.request({
-                            method: "wallet_addEthereumChain",
-                            params: [liskSepoliaChainParams],
-                        });
-                    } catch (addError) {
-                        console.error("Failed to add Lisk Sepolia chain:", addError);
-                        return;
-                    }
-                } else {
-                    console.error("Failed to switch to Lisk Sepolia chain:", switchError);
-                    return;
-                }
+              await window.ethereum.request({
+                method: "wallet_addEthereumChain",
+                params: [liskSepoliaChainParams],
+              });
+            } catch (addError) {
+              console.error("Failed to add Lisk Sepolia chain:", addError);
+              return;
             }
+          } else {
+            console.error(
+              "Failed to switch to Lisk Sepolia chain:",
+              switchError
+            );
+            return;
+          }
         }
+      }
 
-        await window.ethereum.request({ method: 'eth_requestAccounts' });
-        updateButton();
-        console.log('Connected to MetaMask and Lisk Sepolia network');
-        await getAddress();  // Ensure getAddress is awaited to handle async
-        window.location.replace(location.pathname);
+      await window.ethereum.request({ method: "eth_requestAccounts" });
+      updateButton();
+      console.log("Connected to MetaMask and Lisk Sepolia network");
+      await getAddress(); // Ensure getAddress is awaited to handle async
+      window.location.replace(location.pathname);
     } catch (error) {
-        console.error("Failed to connect to MetaMask:", error);
+      console.error("Failed to connect to MetaMask:", error);
     }
-}
-
+  }
 
   useEffect(() => {
     let val = window.ethereum.isConnected();
-    if(val) {
-      console.log("is it because of this?", val)
+    if (val) {
+      console.log("is it because of this?", val);
       getAddress();
       toggleConnect(val);
       updateButton();
     }
-    window.ethereum.on("accountsChanged", function(account) {
-      window.location.replace(location.pathname)
-    })
-  })
+    window.ethereum.on("accountsChanged", function (account) {
+      window.location.replace(location.pathname);
+    });
+  });
 
   return (
     <div className="">
       <nav className="w-screen">
         <ul className="flex items-end justify-between py-3 bg-transparent text-white pr-5">
           <li className="flex items-end ml-5 pb-2">
-            <Link to="/">
-            RECOMMERCE
-            </Link>
+            <Link to="/">RECOMMERCE</Link>
           </li>
           <li className="w-2/6">
-         
             <ul className="lg:flex justify-between font-bold mr-10 text-lg">
               {location.pathname === "/marketPlace" ? (
                 <li className="border-b-2 hover:pb-0 p-2">

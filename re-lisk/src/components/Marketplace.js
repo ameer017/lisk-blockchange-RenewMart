@@ -22,7 +22,7 @@ async function  getAllProducts() {
 
     let contract = new ethers.Contract(MarketplaceJSON.address, MarketplaceJSON.abi, signer)
    
-    let transaction = await contract. getAllProducts()
+    let transaction = await contract.getAllProducts()
 
  
     const items = await Promise.all(transaction.map(async i => {
