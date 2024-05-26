@@ -8,6 +8,7 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
+import Register from './components/Register.js';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/productPage/:tokenId" element={<ProductPage />}/>        
           <Route path="/profile" element={<Profile />}/>
           <Route path="/sellProduct" element={<SellProduct />}/>             
+          <Route path="/register" element={<Register />}/>             
         </Routes>
     </div>
   );

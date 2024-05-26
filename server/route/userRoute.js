@@ -11,11 +11,10 @@ const router = express.Router();
 
 router.post("/create", createUser);
 router.post("/login", loginUser);
-router.get("/verify-email", verifyAccount);
+router.patch("/verify-email", verifyAccount);
 router.get("/logout", logoutUser);
-
+router.get("/get-user", getUser);
 
 router.delete("/:id", deleteUser);
-router.get("/:id", getUser);
 
 module.exports = router;

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
+import logo from "../assest/renew-mart-high-resolution-logo-white-transparent.png"
 
 function Navbar() {
   const [connected, toggleConnect] = useState(false);
@@ -93,14 +94,16 @@ function Navbar() {
     window.ethereum.on("accountsChanged", function (account) {
       window.location.replace(location.pathname);
     });
-  });
+  }, [location.pathname]);
 
   return (
     <div className="">
       <nav className="w-screen">
         <ul className="flex items-end justify-between py-3 bg-transparent text-white pr-5">
           <li className="flex items-end ml-5 pb-2">
-            <Link to="/">RECOMMERCE</Link>
+            <Link to="/">
+              <img src={logo} alt="" className="w-[100px]" />
+            </Link>
           </li>
           <li className="w-2/6">
             <ul className="lg:flex justify-between font-bold mr-10 text-lg">
@@ -115,11 +118,11 @@ function Navbar() {
               )}
               {location.pathname === "/sellProduct" ? (
                 <li className="border-b-2 hover:pb-0 p-2">
-                  <Link to="/sellProduct">List My NFT</Link>
+                  <Link to="/sellProduct">List My product</Link>
                 </li>
               ) : (
                 <li className="hover:border-b-2 hover:pb-0 p-2">
-                  <Link to="/sellProduct">List My NFT</Link>
+                  <Link to="/sellProduct">List My product</Link>
                 </li>
               )}
               {location.pathname === "/profile" ? (
@@ -146,7 +149,7 @@ function Navbar() {
       <div className="text-white text-bold text-right mr-10 text-sm">
         {currAddress !== "0x"
           ? "Connected to"
-          : "Not Connected. Please login to view NFTs"}{" "}
+          : "Not Connected. Please login to view products"}{" "}
         {currAddress !== "0x" ? currAddress.substring(0, 15) + "..." : ""}
       </div>
     </div>

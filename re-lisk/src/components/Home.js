@@ -1,7 +1,13 @@
 import React from "react";
 import Navbar from "./Navbar";
-import heroimg from '../assest/heroImg.png'
+import heroimg from "../assest/heroImg.png";
+import { useNavigate } from "react-router";
 const Home = () => {
+  const navigate = useNavigate();
+
+  const loadReg = () => {
+    navigate("/register");
+  };
   return (
     <div>
       <Navbar />
@@ -16,15 +22,14 @@ const Home = () => {
               Transform your buying and selling journey with the revolutionary
               power of blockchain technology.
             </p>
-           
-              <div className=" flex mt-10 gap-5">
-              <button >Explore</button>
-              <button >Create</button>
-              </div>
-         
+
+            <div className=" flex mt-10 gap-5">
+              <button onClick={loadReg}>Get Started</button>
+              <button>Create</button>
+            </div>
           </div>
           <div>
-            <img src={heroimg} alt=""  />
+            <img src={heroimg} alt="" />
           </div>
         </div>
       </div>

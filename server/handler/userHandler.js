@@ -123,20 +123,21 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const getUser = asyncHandler(async (req, res) => {
-  const userId = req.params.id;
+  const user = await User.findById(req.user._id);
 
-  try {
-    const user = await User.findById(userId).select("-password");
+  if (user) {
+    const { _id, name, emailAddress, phone, isVerified } = user;
 
-    if (!user) {
-      res.status(404);
-      throw new Error("User not found");
-    }
-
-    res.status(200).json(user);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server error");
+    res.status(200).json({
+      _id,
+      name,
+      emailAddress,
+      phone,
+      isVerified,
+    });
+  } else {
+    res.status(404);
+    throw new Error("User not found");
   }
 });
 

@@ -14,7 +14,7 @@ const [dataFetched, updateDataFetched] = useState(false);
 const [message, updateMessage] = useState("");
 const [currAddress, updateCurrAddress] = useState("0x");
 
-async function getNFTData(tokenId) {
+async function getproductData(tokenId) {
     const ethers = require("ethers");
     //After adding your Hardhat network to your metamask, this code will get providers and signers
     const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -22,7 +22,7 @@ async function getNFTData(tokenId) {
     const addr = await signer.getAddress();
     //Pull the deployed contract instance
     let contract = new ethers.Contract(MarketplaceJSON.address, MarketplaceJSON.abi, signer)
-    //create an NFT Token
+    //create an product Token
     var tokenURI = await contract.tokenURI(tokenId);
     const listedToken = await contract.getListedForTokenId(tokenId);
     tokenURI = GetIpfsUrlFromPinata(tokenURI);
@@ -47,7 +47,7 @@ async function getNFTData(tokenId) {
     updateCurrAddress(addr);
 }
 
-async function buyNFT(tokenId) {
+async function buyproduct(tokenId) {
     try {
         const ethers = require("ethers");
         //After adding your Hardhat network to your metamask, this code will get providers and signers
@@ -57,12 +57,12 @@ async function buyNFT(tokenId) {
         //Pull the deployed contract instance
         let contract = new ethers.Contract(MarketplaceJSON.address, MarketplaceJSON.abi, signer);
         const salePrice = ethers.utils.parseUnits(data.price, 'ether')
-        updateMessage("Buying the NFT... Please Wait (Upto 5 mins)")
+        updateMessage("Buying the product... Please Wait (Upto 5 mins)")
         //run the executeSale function
         let transaction = await contract.executeSale(tokenId, {value:salePrice});
         await transaction.wait();
 
-        alert('You successfully bought the NFT!');
+        alert('You successfully bought the product!');
         updateMessage("");
     }
     catch(e) {
@@ -73,7 +73,7 @@ async function buyNFT(tokenId) {
     const params = useParams();
     const tokenId = params.tokenId;
     if(!dataFetched)
-        getNFTData(tokenId);
+        getproductData(tokenId);
     if(typeof data.image == "string")
         data.image = GetIpfsUrlFromPinata(data.image);
 
@@ -103,7 +103,7 @@ async function buyNFT(tokenId) {
                     </div>
                     <div>
                     { currAddress !== data.owner && currAddress !== data.seller ?
-                        <button className="enableEthereumButton bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm" onClick={() => buyNFT(tokenId)}>For Sale</button>
+                        <button className="enableEthereumButton bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm" onClick={() => buyproduct(tokenId)}>For Sale</button>
                         : <div className="text-emerald-700">You are the owner of this Product</div>
                     }
                     
