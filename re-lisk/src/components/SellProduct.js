@@ -83,7 +83,7 @@ export default function SellProduct () {
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
             disableButton();
-            updateMessage("Uploading product(takes 5 mins).. please dont click anything!")
+            updateMessage("Uploading product(takes 5 mins).. please don't click anything!")
 
             //Pull the deployed contract instance
             let contract = new ethers.Contract(Marketplace.address, Marketplace.abi, signer)
@@ -108,7 +108,7 @@ export default function SellProduct () {
         }
     }
 
-    console.log("Working", process.env);
+    // console.log("Working", process.env);
     return (
         <div className="h-25px">
         <Navbar></Navbar>

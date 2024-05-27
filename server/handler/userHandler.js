@@ -40,29 +40,43 @@ const createUser = asyncHandler(async (req, res) => {
     });
 
     if (user) {
-      const verificationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
+      const verificationUrl = `${process.env.FRONTEND_URL}/verify?token=${verificationToken}`;
 
       await sendEmail({
         from: process.env.EMAIL_USER,
         to: user.emailAddress,
         subject: "Verify Your Renew Mart Account",
         html: `
+        <div>
+        <div >
             <h1>Dear ${user.name},</h1>
-            <p>Thank you for registering at Renew Mart.\n Please click the link below to verify your email address and complete your registration:</p>
-            <a href="${verificationUrl}">Verify Your Email</a>
-            <p>If you did not request this, please ignore this email.</p>
-            <p>Best regards,</p>
-            <p>The Renew Mart Team</p>
+        </div>
+        <div >
+        <p>Thank you for registering at Renew Mart.</p>
+        <p>We are excited to have you on board. You can now explore our marketplace and list your products.</p>
+        <p>If you have any questions or need assistance, please feel free to contact our support team.</p>
+        <p>Best regards,</p>
+        <p>The Renew Mart Team</p>
+        <a href="mailto:rajiabdullahi907@outlook.com">Email</a>
+        </div>
+        <div >
+            <p>&copy; ${new Date().getFullYear()} Renew Mart. All rights reserved.</p>
+        </div>
+    </div>
           `,
       });
 
-      const { _id, name, emailAddress, phone, isVerified } = user;
+      const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+      res.header("Authorization", `Bearer ${token}`).send({ token });
+
+      const { _id, name, emailAddress, phone } = user;
       res.status(201).json({
         _id,
         name,
         emailAddress,
         phone,
-        isVerified,
+
+        token,
       });
     } else {
       res.status(400);
@@ -89,10 +103,10 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new Error("User not found, please signup");
   }
 
-  if (!user.isVerified) {
-    res.status(400);
-    throw new Error("Please verify your email before logging in");
-  }
+  // if (!user.isVerified) {
+  //   res.status(400);
+  //   throw new Error("Please verify your email before logging in");
+  // }
 
   const passwordIsCorrect = await bcrypt.compare(password, user.password);
 
@@ -106,14 +120,13 @@ const loginUser = asyncHandler(async (req, res) => {
   });
 
   if (user && passwordIsCorrect) {
-    const { _id, name, emailAddress, phone, isVerified } = user;
+    const { _id, name, emailAddress, phone } = user;
 
     res.status(200).json({
       _id,
       name,
       emailAddress,
       phone,
-      isVerified,
       token,
     });
   } else {
@@ -123,21 +136,18 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const getUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
-
-  if (user) {
-    const { _id, name, emailAddress, phone, isVerified } = user;
-
-    res.status(200).json({
-      _id,
-      name,
-      emailAddress,
-      phone,
-      isVerified,
-    });
-  } else {
-    res.status(404);
-    throw new Error("User not found");
+  try {
+    console.log("Fetching user with ID:", req.user._id);
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      console.log("User not found with ID:", req.user._id);
+      return res.status(404).send("User not found");
+    }
+    console.log("User found:", user);
+    res.json(user);
+  } catch (err) {
+    console.error("Error fetching user:", err);
+    res.status(500).send("Server error");
   }
 });
 

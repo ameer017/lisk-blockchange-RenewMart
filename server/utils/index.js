@@ -31,8 +31,23 @@ const generateToken = (id) => {
 const hashToken = (token) => {
   return crypto.createHash("sha256").update(token.toString()).digest("hex");
 };
+
+const authenticateToken = (req, res, next) => {
+  const token = req.header('Authorization')?.split(' ')[1];
+  if (!token) return res.status(401).send('Access denied. No token provided.');
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) return res.status(403).send('Invalid token.');
+    console.log('Token verified:', user);
+    req.user = user;
+    next();
+  });
+};
+
+
 module.exports = {
   sendEmail,
   generateToken,
   hashToken,
+  authenticateToken,
 };

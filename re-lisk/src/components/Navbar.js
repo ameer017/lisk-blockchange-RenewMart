@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
-import logo from "../assest/renew-mart-high-resolution-logo-white-transparent.png"
+import logo from "../assest/renew-mart-high-resolution-logo-white-transparent.png";
 
 function Navbar() {
   const [connected, toggleConnect] = useState(false);
@@ -98,52 +98,51 @@ function Navbar() {
 
   return (
     <div className="">
-      <nav className="w-screen">
-        <ul className="flex items-end justify-between py-3 bg-transparent text-white pr-5">
+      <nav className="w-screen border-b">
+        <ul className="flex items-end justify-between py-5 px-10 bg-transparent text-white ">
           <li className="flex items-end ml-5 pb-2">
             <Link to="/">
-              <img src={logo} alt="" className="w-[100px]" />
+              <img src={logo} alt="" className="w-[150px]" />
             </Link>
           </li>
-          <li className="w-2/6">
-            <ul className="lg:flex justify-between font-bold mr-10 text-lg">
-              {location.pathname === "/marketPlace" ? (
-                <li className="border-b-2 hover:pb-0 p-2">
-                  <Link to="/marketPlace">Marketplace</Link>
-                </li>
-              ) : (
-                <li className="hover:border-b-2 hover:pb-0 p-2">
-                  <Link to="/marketPlace">Marketplace</Link>
-                </li>
-              )}
-              {location.pathname === "/sellProduct" ? (
-                <li className="border-b-2 hover:pb-0 p-2">
-                  <Link to="/sellProduct">List My product</Link>
-                </li>
-              ) : (
-                <li className="hover:border-b-2 hover:pb-0 p-2">
-                  <Link to="/sellProduct">List My product</Link>
-                </li>
-              )}
-              {location.pathname === "/profile" ? (
-                <li className="border-b-2 hover:pb-0 p-2">
-                  <Link to="/profile">Profile</Link>
-                </li>
-              ) : (
-                <li className="hover:border-b-2 hover:pb-0 p-2">
-                  <Link to="/profile">Profile</Link>
-                </li>
-              )}
-              <li>
-                <button
-                  className="enableEthereumButton bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm"
-                  onClick={connectWebsite}
-                >
-                  {connected ? "Connected" : "Connect Wallet"}
-                </button>
+
+          <ul className="lg:flex justify-between font-bold mr-10 text-lg">
+            {location.pathname === "/marketPlace" ? (
+              <li className="border-b-2 hover:pb-0 p-2">
+                <Link to="/marketPlace">Marketplace</Link>
               </li>
-            </ul>
-          </li>
+            ) : (
+              <li className="hover:border-b-2 hover:pb-0 p-2">
+                <Link to="/marketPlace">Marketplace</Link>
+              </li>
+            )}
+            {location.pathname === "/sellProduct" ? (
+              <li className="border-b-2 hover:pb-0 p-2">
+                <Link to="/sellProduct">List product</Link>
+              </li>
+            ) : (
+              <li className="hover:border-b-2 hover:pb-0 p-2">
+                <Link to="/sellProduct">List product</Link>
+              </li>
+            )}
+            {location.pathname === "/profile" ? (
+              <li className="border-b-2 hover:pb-0 p-2">
+                <Link to="/profile">Profile</Link>
+              </li>
+            ) : (
+              <li className="hover:border-b-2 hover:pb-0 p-2">
+                <Link to="/profile">Profile</Link>
+              </li>
+            )}
+            <li>
+              <button
+                className="enableEthereumButton bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm"
+                onClick={connectWebsite}
+              >
+                {connected ? "Connected" : "Connect"}
+              </button>
+            </li>
+          </ul>
         </ul>
       </nav>
       <div className="text-white text-bold text-right mr-10 text-sm">
