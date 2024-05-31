@@ -1,27 +1,15 @@
 import Navbar from "./Navbar";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import MarketplaceJSON from "../Marketplace.json";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ProductTile from "./ProductTile";
-import Logout from "./Logout";
 
 export default function Profile() {
   const [data, updateData] = useState([]);
   const [dataFetched, updateFetched] = useState(false);
   const [address, updateAddress] = useState("0x");
   const [totalPrice, updateTotalPrice] = useState("0");
-  const [user, setUser] = useState(null);
-  const [error, setError] = useState("");
-
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    localStorage.getItem("token") ? true : false
-  );
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsLoggedIn(false);
-  };
 
   async function getProductData(tokenId) {
     const ethers = require("ethers");
@@ -77,55 +65,10 @@ export default function Profile() {
   const tokenId = params.tokenId;
   if (!dataFetched) getProductData(tokenId);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    console.log("Token from local storage:", token);
-
-    if (token) {
-      axios
-        .get("http://localhost:3500/api/users/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((response) => {
-          console.log("User data fetched:", response.data);
-          setUser(response.data);
-        })
-        .catch((error) => {
-          console.error("Error fetching user data:", error);
-          if (error.response && error.response.status === 404) {
-            setError("User not found");
-          } else {
-            setError("Server error");
-          }
-        });
-    } else {
-      setError("No token found in local storage");
-    }
-  }, []);
-
-  if (error) {
-    return (
-      <div>
-        <p>{error}</p>
-        <Link to="/login">Proceed to login</Link>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return <p>Loading...</p>;
-  }
   return (
     <div className="profileClass" style={{ "min-height": "100vh" }}>
       <Navbar></Navbar>
       <div className="profileClass">
-        <div className="flex text-center flex-col mt-11 md:text-2xl text-white">
-          <div className="mb-5">
-            <p>Name: {user.name}</p>
-          </div>
-        </div>
         <div className="flex text-center flex-col mt-11 md:text-2xl text-white">
           <div className="mb-5">
             <h2 className="font-bold">Wallet Address</h2>
@@ -154,12 +97,6 @@ export default function Profile() {
               ? "Oops, No product data to display (Are you logged in?)"
               : ""}
           </div>
-
-          {isLoggedIn ? (
-            <Logout onLogout={handleLogout} />
-          ) : (
-            <Link to="/login">Login</Link>
-          )}
         </div>
       </div>
     </div>
