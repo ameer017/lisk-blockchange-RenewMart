@@ -93,7 +93,7 @@ function Navbar() {
   useEffect(() => {
     let val = window.ethereum.isConnected();
     if (val) {
-      console.log("is it because of this?", val);
+      // console.log("is it because of this?", val);
       getAddress();
       toggleConnect(val);
       updateButton();
@@ -152,7 +152,7 @@ function Navbar() {
               className="enableEthereumButton bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm"
               onClick={connectWebsite}
             >
-              {connected ? "Connected" : "Connect Wallet"}
+              {connected ? "Connected" : "Connect"}
             </button>
           </li>
         </ul>
